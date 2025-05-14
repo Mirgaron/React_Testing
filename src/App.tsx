@@ -22,7 +22,13 @@ function App() {
   const CountBySalon = (salonId: Salon['id']) => {
     const salon = salones.find((salon) => salon.id === salonId);
     if (salon) {
-      const count = salon.alumnos.filter((alumno) => alumno.activo).length;
+      //const count = salon.alumnos.filter((alumno) => alumno.activo).length;
+      const count = salon.alumnos.reduce((acc, alumno) => {
+        if (alumno.activo) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
       return count;
     }
     return 0;
