@@ -1,6 +1,6 @@
 import { dataSalones } from "./data/dataSalones";
 import { useEffect, useState } from "react";
-import type { Salon } from "./types";
+import type { Salon ,Alumno } from "./types";
 
 function App() {
   const [salones, setSalones] = useState<Salon[]>([]);
@@ -9,7 +9,7 @@ function App() {
     setSalones(dataSalones);
   }, []);
 
-  const handleChangeStatus = (alumnoId: number) => {
+  const handleChangeStatus = (alumnoId: Alumno['id']) => {
     setSalones((prevSalones) =>
       prevSalones.map((salon) => ({...salon,alumnos: salon.alumnos.map((alumno) =>
                                                                                 alumno.id === alumnoId
@@ -19,14 +19,24 @@ function App() {
     );
   };
 
+  const CountBySalon = (salonId: Salon['id']) => {
+    const salon = salones.find((salon) => salon.id === salonId);
+    if (salon) {
+      const count = salon.alumnos.filter((alumno) => alumno.activo).length;
+      return count;
+    }
+    return 0;
+  };
+
   return (
     <>
       <div className="">
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <h1 className="text-3xl font-bold underline">Escuelita!</h1>
         <div className="grid grid-cols-4 gap-4">
           {salones.map((salon) => (
             <div key={salon.id} className="border p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold">{salon.name}</h2>
+              <h2 className="text-xl font-semibold">{salon.name}               <span className="text-gray-500 text-xs">  Activos: {CountBySalon(salon.id)}  </span>
+              </h2>
               <ul>
                 {salon.alumnos.map((alumno) => (
                   <li key={alumno.id}>
